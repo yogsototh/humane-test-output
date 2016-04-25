@@ -44,17 +44,22 @@
                 (let [print-expected (fn [actual]
                                        (let [only-in-a (clojure.string/replace actual #"Only in A: (.*)($|Only in B:.*)" "$1")
                                              only-in-b (clojure.string/replace actual #"Only in A: (.*)($|Only in B:.*)" "$2")]
-                                       (print "expected: ")
-                                       (pp/pprint expected)
-                                       (println "  actual:")
-                                       (print "Only in A: ")
-                                       (pp/pprint (when (not (clojure.string/blank? only-in-a))
-                                                    (read-string only-in-a)))
-                                       (print "Only in B: ")
-                                       (pp/pprint (when (not (clojure.string/blank? only-in-b))
-                                                    (read-string only-in-b)))
-                                         )
-                                       )]
+                                          (print "expected: ")
+                                          (print (str \u001b "[32m"))
+                                          (pp/pprint expected)
+                                          (print (str \u001b "[31m"))
+                                          (println "  actual:")
+                                          (print (str \u001b "[0m"))
+                                          (print " Only in A: ")
+                                          (print (str \u001b "[36m"))
+                                          (pp/pprint (when (not (clojure.string/blank? only-in-a))
+                                                       (read-string only-in-a)))
+                                          (print (str \u001b "[0m"))
+                                          (print " Only in B: ")
+                                          (print (str \u001b "[33m"))
+                                          (pp/pprint (when (not (clojure.string/blank? only-in-b))
+                                                       (read-string only-in-b)))
+                                          (println (str \u001b "[0m"))))]
                   (if (seq diffs)
                     (doseq [[actual [a b]] diffs]
                       (print-expected actual)
