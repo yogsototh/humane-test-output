@@ -43,7 +43,7 @@
       #?(:clj (binding [*out* (pp/get-pretty-writer *out*)]
                 (let [print-expected (fn [actual]
                                        (let [only-in-a (clojure.string/replace actual #"Only in A: (.*)($|Only in B:.*)" "$1")
-                                             only-in-b (clojure.string/replace actual #"Only in A: (.*)($|Only in B:.*)" "$2")]
+                                             only-in-b (clojure.string/replace actual #"Only in A: (.*)($|Only in B:(.*))" "$3")]
                                           (print "expected: ")
                                           (print (str \u001b "[32m"))
                                           (pp/pprint expected)
