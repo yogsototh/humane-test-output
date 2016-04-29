@@ -1,7 +1,9 @@
 (ns pjstadig.util
   #?(:clj (:use [clojure.test]))
-  (:require #?@(:clj  [[clojure.pprint :as pp]]
+  (:require #?@(:clj  [[clojure.pprint :as pp]
+                       [clojure.data :refer [diff]]]
                 :cljs [[cljs.pprint :as pp :include-macros true]
+                       [clojure.data :refer [diff]]
                        [cljs.test :refer [inc-report-counter! testing-vars-str testing-contexts-str get-current-env]]]))
   #?(:cljs (:import [goog.string StringBuffer])))
 
@@ -43,20 +45,26 @@
       #?(:clj (binding [*out* (pp/get-pretty-writer *out*)]
                 (let [print-expected (fn [actual]
                                        (print "expected: ")
+                                       (print "\u001b[36m")
                                        (pp/pprint expected)
-                                       (print "  actual: ")
-                                       (pp/pprint actual))]
+                                       (print "\u001b[0m  actual: ")
+                                       (print "\u001b[33m")
+                                       (pp/pprint actual)
+                                       (print "\u001b[0m"))]
                   (if (seq diffs)
                     (doseq [[actual [a b]] diffs]
                       (print-expected actual)
                       (print "    diff:")
                       (if a
-                        (do (print " - ")
+                        (do (print "\u001b[31m - ")
                             (pp/pprint a)
-                            (print "          + "))
-                        (print " + "))
+                            (print "\u001b[32m          + "))
+                        (print "\u001b[32m + "))
+                      (print "\u001b[0m")
                       (when b
-                        (pp/pprint b)))
+                        (print "\u001b[32m")
+                        (pp/pprint b)
+                        (print "\u001b[0m")))
                     (print-expected actual))))
         :cljs (let [sb (StringBuffer.)]
                 (binding [*out* (pp/get-pretty-writer (StringBufferWriter. sb))]
